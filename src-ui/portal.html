@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#070a12">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Sovereign Recipient Portal • Air-Gapped Terminal</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        if (window.location.protocol === 'file:') {
+            window.location.href = 'http://127.0.0.1:8080/portal.html';
+        }
+    </script>
+    <style>
+        /* Mobile-First Premium Cyberpunk Theme */
+        :root {
+            --bg-deep: #050811;
+            --bg-card: rgba(13, 20, 36, 0.85);
+            --bg-card-active: rgba(18, 28, 51, 0.95);
+            --border-glow: rgba(6, 182, 212, 0.35);
+            --emerald-glow: rgba(16, 185, 129, 0.4);
+            --safe-bottom: env(safe-area-inset-bottom, 16px);
+        }
+
+        body {
+            background: radial-gradient(circle at 50% 0%, #0c1a30 0%, #050811 70%);
+            color: #f1f5f9;
+            min-height: 100vh;
+            padding: 14px;
+            padding-bottom: calc(var(--safe-bottom) + 20px);
+            -webkit-tap-highlight-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .portal-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* Top Mobile Header */
+        .mobile-header {
+            background: rgba(11, 17, 32, 0.75);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+        }
+
+        .header-title-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-icon {
+            font-size: 24px;
+            background: rgba(6, 182, 212, 0.12);
+            border: 1px solid var(--border-glow);
+            padding: 6px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-text h1 {
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: #fff;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .header-text p {
+            font-size: 10px;
+            color: var(--cyan);
+            margin: 2px 0 0 0;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge-live {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 9px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.5);
+            color: #34d399;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .dot-green {
+            width: 7px;
+            height: 7px;
+            background: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10b981;
+            animation: pulse-ring 1.8s infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        /* Hero Agent Identity Card */
+        .agent-hero-card {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(13, 20, 36, 0.95) 100%);
+            border: 1px solid var(--border-glow);
+            border-radius: 14px;
+            padding: 16px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .agent-hero-card::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .hero-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--cyan);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .key-badge {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid #10b981;
+            color: #34d399;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .agent-select-wrapper {
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .custom-select {
+            width: 100%;
+            background: #090e1a;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.2s;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2306b6d4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+        }
+
+        .custom-select:focus {
+            border-color: var(--cyan);
+            box-shadow: 0 0 14px rgba(6, 182, 212, 0.3);
+        }
+
+        .agent-chips-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+
+        .info-chip {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            padding: 5px 10px;
+            font-size: 11px;
+            color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-inspect-key {
+            background: transparent;
+            border: 1px dashed rgba(6, 182, 212, 0.4);
+            color: #38bdf8;
+            font-size: 11px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-left: auto;
+            transition: background 0.2s;
+        }
+
+        .btn-inspect-key:hover {
+            background: rgba(6, 182, 212, 0.1);
+        }
+
+        .key-drawer {
+            display: none;
+            margin-top: 10px;
+            padding: 10px 12px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            font-family: 'Consolas', monospace;
+            font-size: 10px;
+            line-height: 1.5;
+            word-break: break-all;
+        }
+
+        /* Section Cards */
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .card-section-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-refresh {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #94a3b8;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+        }
+
+        .btn-refresh:hover, .btn-refresh:active {
+            color: #fff;
+            border-color: var(--cyan);
+            background: rgba(6, 182, 212, 0.1);
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .filter-tab {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #94a3b8;
+            border-radius: 20px;
+            padding: 5px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .filter-tab.active {
+            background: rgba(6, 182, 212, 0.15);
+            border-color: var(--cyan);
+            color: #38bdf8;
+        }
+
+        /* Dispatch Item Card */
+        .dispatch-item {
+            background: rgba(18, 25, 43, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .dispatch-item.mine {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(18, 25, 43, 0.9) 100%);
+            border: 1px solid rgba(6, 182, 212, 0.45);
+            box-shadow: 0 4px 16px rgba(6, 182, 212, 0.1);
+        }
+
+        .disp-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .disp-id {
+            font-family: 'Consolas', monospace;
+            font-weight: 800;
+            font-size: 13px;
+            color: var(--cyan);
+        }
+
+        .disp-badge {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+
+        .badge-mine {
+            background: rgba(16, 185, 129, 0.18);
+            border: 1px solid #10b981;
+            color: #34d399;
+        }
+
+        .badge-other {
+            background: rgba(245, 158, 11, 0.12);
+            border: 1px solid rgba(245, 158, 11, 0.5);
+            color: #fbbf24;
+        }
+
+        .disp-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #f1f5f9;
+        }
+
+        .disp-target-row {
+            font-size: 11px;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-decrypt-touch {
+            width: 100%;
+            min-height: 44px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-decrypt-touch:active {
+            transform: scale(0.98);
+        }
+
+        .btn-decrypt-active {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+        }
+
+        .btn-decrypt-locked {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #94a3b8;
+        }
+
+        /* Decrypted Classified Payload Section */
+        #decrypted-view {
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            background: linear-gradient(180deg, rgba(16, 185, 129, 0.06) 0%, rgba(13, 20, 36, 0.95) 100%);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .classified-banner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .classified-text {
+            font-size: 11px;
+            font-weight: 800;
+            color: #34d399;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .meta-pill {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+            padding: 8px 10px;
+        }
+
+        .meta-pill-label {
+            font-size: 10px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin-bottom: 2px;
+        }
+
+        .meta-pill-value {
+            font-size: 12px;
+            font-weight: 700;
+            color: #38bdf8;
+            word-break: break-word;
+        }
+
+        /* Image Preview Box */
+        .preview-img-container {
+            position: relative;
+            cursor: pointer;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(6, 182, 212, 0.35);
+            background: #020409;
+            text-align: center;
+            margin-bottom: 14px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        }
+
+        .preview-img {
+            max-width: 100%;
+            max-height: 320px;
+            display: block;
+            margin: 0 auto;
+            object-fit: contain;
+        }
+
+        .img-zoom-hint {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(11, 17, 32, 0.9);
+            border: 1px solid var(--cyan);
+            color: #38bdf8;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            pointer-events: none;
+            backdrop-filter: blur(8px);
+            white-space: nowrap;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+        }
+
+        /* Text Preview Code Box */
+        .code-box-mobile {
+            background: #03060d;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 12px;
+            font-family: 'Consolas', 'Fira Code', monospace;
+            font-size: 12px;
+            color: #38bdf8;
+            word-break: break-all;
+            white-space: pre-wrap;
+            max-height: 220px;
+            overflow-y: auto;
+            margin-bottom: 14px;
+            line-height: 1.5;
+        }
+
+        /* Action Buttons Grid */
+        .action-buttons-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        @media (max-width: 520px) {
+            .action-buttons-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .btn-action-mobile {
+            min-height: 48px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .btn-action-mobile:active {
+            transform: scale(0.97);
+        }
+
+        .btn-download-primary {
+            background: linear-gradient(135deg, #06b6d4 0%, #0284c7 100%);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(6, 182, 212, 0.35);
+        }
+
+        .btn-leak-simulate {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.5);
+            color: #fca5a5;
+        }
+
+        .btn-leak-simulate:hover, .btn-leak-simulate:active {
+            background: rgba(239, 68, 68, 0.25);
+            color: #fff;
+        }
+
+        /* Fullscreen Lightbox Modal */
+        #image-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 6, 12, 0.98);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 10000;
+            flex-direction: column;
+            padding: 16px;
+            padding-top: max(16px, env(safe-area-inset-top));
+            padding-bottom: max(16px, env(safe-area-inset-bottom));
+        }
+
+        .modal-top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 12px;
+        }
+
+        .btn-close-modal {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .modal-img-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        #modal-img-elem {
+            max-width: 100%;
+            max-height: 82vh;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Floating Mobile Toast */
+        .toast-mobile {
+            position: fixed;
+            bottom: calc(var(--safe-bottom) + 16px);
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 32px);
+            max-width: 440px;
+            padding: 12px 18px;
+            background: rgba(13, 20, 36, 0.96);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--cyan);
+            color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            font-size: 13px;
+            font-weight: 600;
+            display: none;
+            z-index: 99999;
+            text-align: center;
+            animation: toastIn 0.25s ease-out;
+        }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translate(-50%, 15px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="portal-container">
+        <!-- Top Cyber Header -->
+        <header class="mobile-header">
+            <div class="header-title-box">
+                <div class="header-icon">🛡️</div>
+                <div class="header-text">
+                    <h1>RECIPIENT PORTAL</h1>
+                    <p>SOVEREIGN FIELD TERMINAL (PQC)</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="badge-live">
+                    <div class="dot-green"></div>
+                    AIR-GAP
+                </div>
+                <a href="/" style="text-decoration: none; color: #94a3b8; font-size: 11px; padding: 5px 8px; border-radius: 6px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);">Hub ↗</a>
+            </div>
+        </header>
+
+        <!-- Active Agent Identity Card -->
+        <div class="agent-hero-card">
+            <div class="hero-top-row">
+                <span class="hero-label">👤 Terminal Identity & Keyring</span>
+                <span id="active-key-badge" class="key-badge">🔑 ML-KEM-768 ACTIVE</span>
+            </div>
+
+            <div class="agent-select-wrapper">
+                <select id="agent-select" class="custom-select" onchange="switchAgentIdentity()">
+                    <!-- Populated dynamically from /api/users/list -->
+                </select>
+            </div>
+
+            <div class="agent-chips-row">
+                <div class="info-chip" id="chip-device">📱 Device: <strong style="color:var(--cyan);">Detecting...</strong></div>
+                <div class="info-chip" id="chip-clearance">🛡️ Clearance: <strong style="color:#f59e0b;">Secret-04</strong></div>
+                <button class="btn-inspect-key" onclick="toggleKeyDetails()">🔍 View Keys</button>
+            </div>
+
+            <div id="agent-details-box" class="key-drawer">
+                <div style="margin-bottom: 6px;"><strong style="color:var(--cyan);">Public Key (ML-KEM-768):</strong> <span id="disp-pk-hex" style="color:#94a3b8;"></span></div>
+                <div><strong style="color:#f59e0b;">Private Key (Hardware/Local):</strong> <span id="disp-sk-hex" style="color:#cbd5e1;"></span></div>
+            </div>
+        </div>
+
+        <!-- Incoming Dispatches List -->
+        <div class="glass-card">
+            <div class="card-header-row">
+                <span class="card-section-title">📥 Incoming Classified Dispatches</span>
+                <button class="btn-refresh" onclick="loadDispatches()">
+                    <span id="refresh-icon">🔄</span> Refresh
+                </button>
+            </div>
+
+            <!-- Quick Filter Tabs -->
+            <div class="filter-tabs">
+                <button class="filter-tab active" onclick="setFilter('all', this)">All Dispatches (<span id="count-all">0</span>)</button>
+                <button class="filter-tab" onclick="setFilter('mine', this)">Encrypted For Me 🎯 (<span id="count-mine">0</span>)</button>
+                <button class="filter-tab" onclick="setFilter('other', this)">Other Units 🔒 (<span id="count-other">0</span>)</button>
+            </div>
+
+            <div id="dispatches-list">
+                <p style="font-size: 13px; color: var(--text-muted); padding: 12px; text-align: center;">Scanning sovereign air-gap for incoming dispatches...</p>
+            </div>
+
+            <!-- Manual Dispatch Input (Collapsible/Optional) -->
+            <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.06);">
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="portal-dispatch-id" placeholder="Or enter Dispatch ID (e.g. DISP-XXXX)" style="flex: 1; padding: 10px 12px; font-size: 12px; border-radius: 8px; background: #080c14; border: 1px solid rgba(255,255,255,0.12); color: #fff; margin-bottom: 0;">
+                    <button class="btn-action-mobile btn-download-primary" onclick="receiveDispatch()" style="min-height: 40px; padding: 0 14px; font-size: 12px; border-radius: 8px;">🔓 Decrypt</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Decrypted Classified Payload Card (Auto-revealed upon successful decapsulation) -->
+        <div class="glass-card" id="decrypted-view" style="display: none;">
+            <div class="classified-banner">
+                <span class="classified-text">🛡️ TOP SECRET // AIR-GAP DECRYPTED</span>
+                <span class="key-badge">ML-KEM-768 AUTHENTIC</span>
+            </div>
+
+            <!-- Meta details grid -->
+            <div class="meta-grid">
+                <div class="meta-pill">
+                    <div class="meta-pill-label">Filename</div>
+                    <div class="meta-pill-value" id="disp-meta-filename">-</div>
+                </div>
+                <div class="meta-pill">
+                    <div class="meta-pill-label">Carrier Medium</div>
+                    <div class="meta-pill-value" id="disp-meta-medium">-</div>
+                </div>
+                <div class="meta-pill">
+                    <div class="meta-pill-label">Authorized Agent</div>
+                    <div class="meta-pill-value" id="disp-meta-target">-</div>
+                </div>
+                <div class="meta-pill">
+                    <div class="meta-pill-label">Status</div>
+                    <div class="meta-pill-value" style="color:#34d399;">PQC DECAPSULATED</div>
+                </div>
+            </div>
+
+            <!-- Content preview -->
+            <div id="content-preview-container">
+                <div id="content-preview-box" class="code-box-mobile"></div>
+                
+                <div id="img-wrapper" class="preview-img-container" style="display: none;" onclick="openImageModal()">
+                    <img id="image-preview-elem" class="preview-img" alt="Decrypted Image Preview">
+                    <div class="img-zoom-hint">🔍 Tap to View Fullscreen High-Res</div>
+                </div>
+            </div>
+
+            <!-- Big touch action buttons -->
+            <div class="action-buttons-grid">
+                <button id="btn-download-file" class="btn-action-mobile btn-download-primary">
+                    ⬇️ Save to Device
+                </button>
+                <button class="btn-action-mobile btn-leak-simulate" onclick="simulateLeak()">
+                    🚨 Simulate Leak (Test)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fullscreen / Zoom Lightbox Modal (Clean & Responsive) -->
+    <div id="image-modal">
+        <div class="modal-top-bar">
+            <span style="font-size: 13px; font-weight: 700; color: var(--cyan); display: flex; align-items: center; gap: 6px;">
+                🔍 HIGH-RESOLUTION INSPECTION
+            </span>
+            <button class="btn-close-modal" onclick="closeImageModal()">✕ Close</button>
+        </div>
+        <div class="modal-img-wrapper" onclick="closeImageModal()">
+            <img id="modal-img-elem" alt="Full Image Preview" onclick="event.stopPropagation()">
+        </div>
+        <p style="font-size: 11px; color: #94a3b8; text-align: center; margin-top: 10px;">💡 Tap image or '✕ Close' to return to terminal.</p>
+    </div>
+
+    <!-- Floating Native Mobile Toast -->
+    <div id="toast" class="toast-mobile"></div>
+
+    <script>
+        var API_BASE = (window.location && window.location.origin && window.location.origin.indexOf('http') === 0) ? window.location.origin : 'http://127.0.0.1:8080';
+        var currentReceivedFile = null;
+        var currentAgent = null;
+        var registeredUsers = [];
+        var allDispatchesData = [];
+        var activeFilter = 'all';
+
+        function showToast(msg, isErr) {
+            var t = document.getElementById('toast');
+            if (!t) return;
+            t.innerText = msg;
+            t.style.borderColor = isErr ? '#ef4444' : '#06b6d4';
+            t.style.boxShadow = isErr ? '0 10px 30px rgba(239, 68, 68, 0.4)' : '0 10px 30px rgba(6, 182, 212, 0.4)';
+            t.style.display = 'block';
+            setTimeout(function() { t.style.display = 'none'; }, 3200);
+        }
+
+        async function initKeyring() {
+            try {
+                var res = await fetch(API_BASE + '/api/users/list');
+                var data = await res.json();
+                registeredUsers = data.users || [];
+                var sel = document.getElementById('agent-select');
+                if (!sel) return;
+                sel.innerHTML = '';
+                
+                registeredUsers.forEach(function(u) {
+                    var opt = document.createElement('option');
+                    opt.value = u.username;
+                    opt.textContent = u.display_name + ' • ' + u.device + ' (' + u.clearance + ')';
+                    sel.appendChild(opt);
+                });
+
+                var params = new URLSearchParams(window.location.search);
+                var reqUser = params.get('user');
+                if (reqUser && registeredUsers.some(function(u){ return u.username === reqUser.toLowerCase(); })) {
+                    sel.value = reqUser.toLowerCase();
+                } else if (registeredUsers.length > 0) {
+                    sel.value = registeredUsers[0].username;
+                }
+
+                await switchAgentIdentity();
+            } catch (e) {
+                console.error('Failed to load PQC agent keyring:', e);
+            }
+        }
+
+        async function switchAgentIdentity() {
+            var sel = document.getElementById('agent-select');
+            if (!sel || !sel.value) return;
+            var uname = sel.value;
+            currentAgent = registeredUsers.find(function(u){ return u.username === uname; });
+            if (!currentAgent) return;
+
+            // Update UI chips
+            var chipDev = document.getElementById('chip-device');
+            var chipClr = document.getElementById('chip-clearance');
+            if (chipDev) chipDev.innerHTML = '📱 Device: <strong style="color:var(--cyan);">' + currentAgent.device + '</strong>';
+            if (chipClr) chipClr.innerHTML = '🛡️ Clearance: <strong style="color:#f59e0b;">' + currentAgent.clearance + '</strong>';
+
+            // Check if private key exists in localStorage
+            var storedSk = localStorage.getItem('pqc_sk_' + uname);
+            if (!storedSk) {
+                try {
+                    var res = await fetch(API_BASE + '/api/user/credentials?username=' + uname);
+                    var cred = await res.json();
+                    if (cred.success && cred.sk_hex) {
+                        localStorage.setItem('pqc_sk_' + uname, cred.sk_hex);
+                        storedSk = cred.sk_hex;
+                    }
+                } catch (e) {
+                    console.error('Error fetching initial key:', e);
+                }
+            }
+
+            var pkDisp = document.getElementById('disp-pk-hex');
+            var skDisp = document.getElementById('disp-sk-hex');
+            if (pkDisp) pkDisp.innerText = currentAgent.pk_hex ? (currentAgent.pk_hex.slice(0, 36) + '...' + currentAgent.pk_hex.slice(-16)) : 'N/A';
+            if (skDisp) skDisp.innerText = storedSk ? (storedSk.slice(0, 36) + '...' + storedSk.slice(-16)) : 'Missing in LocalStorage';
+
+            renderDispatches();
+        }
+
+        function toggleKeyDetails() {
+            var b = document.getElementById('agent-details-box');
+            if (b) b.style.display = (b.style.display === 'none' ? 'block' : 'none');
+        }
+
+        function setFilter(filterType, elem) {
+            activeFilter = filterType;
+            var tabs = document.querySelectorAll('.filter-tab');
+            tabs.forEach(function(t) { t.classList.remove('active'); });
+            if (elem) elem.classList.add('active');
+            renderDispatches();
+        }
+
+        async function loadDispatches() {
+            var icon = document.getElementById('refresh-icon');
+            if (icon) icon.style.transform = 'rotate(360deg)';
+            try {
+                var res = await fetch(API_BASE + '/api/dispatches/list');
+                var data = await res.json();
+                allDispatchesData = data.dispatches || [];
+                renderDispatches();
+            } catch (e) {
+                var listDiv = document.getElementById('dispatches-list');
+                if (listDiv) listDiv.innerHTML = '<p style="color:#94a3b8; text-align:center; padding:12px;">Connecting to sovereign hotspot node...</p>';
+            }
+        }
+
+        function renderDispatches() {
+            var listDiv = document.getElementById('dispatches-list');
+            if (!listDiv) return;
+
+            var myUname = currentAgent ? currentAgent.username.toLowerCase() : '';
+            var totalCount = allDispatchesData.length;
+            var mineCount = 0;
+            var otherCount = 0;
+
+            allDispatchesData.forEach(function(d) {
+                if (d.assigned_to && d.assigned_to.toLowerCase() === myUname) mineCount++;
+                else otherCount++;
+            });
+
+            var countAll = document.getElementById('count-all');
+            var countMine = document.getElementById('count-mine');
+            var countOther = document.getElementById('count-other');
+            if (countAll) countAll.innerText = totalCount;
+            if (countMine) countMine.innerText = mineCount;
+            if (countOther) countOther.innerText = otherCount;
+
+            var filtered = allDispatchesData.filter(function(d) {
+                var isMine = (d.assigned_to && d.assigned_to.toLowerCase() === myUname);
+                if (activeFilter === 'mine') return isMine;
+                if (activeFilter === 'other') return !isMine;
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                listDiv.innerHTML = '<div style="padding: 20px 10px; text-align: center; color: #94a3b8; font-size: 13px;">' +
+                    '<div style="font-size:26px; margin-bottom:6px;">📡</div>' +
+                    (activeFilter === 'mine' ? 'No pending dispatches encrypted for <strong>' + (currentAgent ? currentAgent.display_name : 'you') + '</strong> yet.' : 'No dispatches found on this hotspot.') +
+                    '</div>';
+                return;
+            }
+
+            listDiv.innerHTML = '';
+            filtered.forEach(function(d) {
+                var isMine = (d.assigned_to && d.assigned_to.toLowerCase() === myUname);
+                var card = document.createElement('div');
+                card.className = 'dispatch-item' + (isMine ? ' mine' : '');
+
+                var fileIcon = '📄';
+                var ext = (d.file_type || '').toLowerCase();
+                if (['.png', '.jpg', '.jpeg', '.bmp', '.webp'].includes(ext)) fileIcon = '🖼️';
+                else if (['.zip', '.tar', '.gz', '.bin'].includes(ext)) fileIcon = '📦';
+
+                var badgeHtml = isMine
+                    ? '<span class="disp-badge badge-mine">🎯 ENCRYPTED FOR YOU</span>'
+                    : '<span class="disp-badge badge-other">🔒 ' + (d.assigned_to ? d.assigned_to.toUpperCase() : 'OTHER') + '</span>';
+
+                var btnClass = isMine ? 'btn-decrypt-active' : 'btn-decrypt-locked';
+                var btnText = isMine ? '🔓 Decapsulate & Decrypt (My Key)' : '🔒 Test Unauthorized Decrypt';
+
+                card.innerHTML = 
+                    '<div class="disp-header-row">' +
+                        '<span class="disp-id">' + d.dispatch_id + '</span>' +
+                        badgeHtml +
+                    '</div>' +
+                    '<div class="disp-meta-row">' +
+                        '<span>' + fileIcon + ' ' + d.filename + '</span>' +
+                        '<span style="font-size:11px; font-weight:normal; color:#94a3b8;">(' + d.file_type + ')</span>' +
+                    '</div>' +
+                    '<div class="disp-target-row">' +
+                        '<span>👤 Target: ' + d.recipient_info + '</span>' +
+                    '</div>' +
+                    '<button class="btn-decrypt-touch ' + btnClass + '" onclick="receiveDispatch(\'' + d.dispatch_id + '\')">' +
+                        btnText +
+                    '</button>';
+
+                listDiv.appendChild(card);
+            });
+        }
+
+        async function receiveDispatch(specificId) {
+            var id = specificId || (document.getElementById('portal-dispatch-id') ? document.getElementById('portal-dispatch-id').value.trim() : '');
+            if (!id) {
+                showToast('⚠️ Please select or enter a Dispatch ID', true);
+                return;
+            }
+            if (document.getElementById('portal-dispatch-id')) {
+                document.getElementById('portal-dispatch-id').value = id;
+            }
+
+            var activeSk = currentAgent ? localStorage.getItem('pqc_sk_' + currentAgent.username) : '';
+
+            showToast('⏳ Decapsulating ML-KEM-768 & Decrypting...', false);
+
+            try {
+                var res = await fetch(API_BASE + '/api/dispatch/receive', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        dispatch_id: id,
+                        sk_hex: activeSk
+                    })
+                });
+                var data = await res.json();
+                if (data.success) {
+                    currentReceivedFile = data;
+                    document.getElementById('decrypted-view').style.display = 'block';
+
+                    var metaFilename = document.getElementById('disp-meta-filename');
+                    var metaMedium = document.getElementById('disp-meta-medium');
+                    var metaTarget = document.getElementById('disp-meta-target');
+                    if (metaFilename) metaFilename.innerText = data.filename;
+                    if (metaMedium) metaMedium.innerText = data.medium_used;
+                    if (metaTarget) metaTarget.innerText = currentAgent ? currentAgent.display_name : data.recipient_info;
+
+                    var textBox = document.getElementById('content-preview-box');
+                    var imgBox = document.getElementById('image-preview-elem');
+                    var imgWrapper = document.getElementById('img-wrapper');
+
+                    var ext = (data.filename.split('.').pop() || '').toLowerCase();
+                    var isImg = (['png', 'jpg', 'jpeg', 'bmp', 'webp'].indexOf(ext) !== -1);
+
+                    if (isImg && data.file_b64) {
+                        textBox.style.display = 'none';
+                        if (imgWrapper) imgWrapper.style.display = 'block';
+                        imgBox.style.display = 'block';
+                        imgBox.src = 'data:image/' + (ext === 'jpg' ? 'jpeg' : ext) + ';base64,' + data.file_b64;
+                    } else if (data.is_text) {
+                        if (imgWrapper) imgWrapper.style.display = 'none';
+                        imgBox.style.display = 'none';
+                        textBox.style.display = 'block';
+                        textBox.innerText = data.text_content;
+                    } else {
+                        if (imgWrapper) imgWrapper.style.display = 'none';
+                        imgBox.style.display = 'none';
+                        textBox.style.display = 'block';
+                        var fileSizeKb = data.file_b64 ? Math.round(data.file_b64.length * 0.75 / 1024) : 0;
+                        textBox.innerText = '[Binary File Decrypted Successfully: ' + data.filename + ' (' + fileSizeKb + ' KB)]\nFormat verified and ready for download.';
+                    }
+
+                    var dlBtn = document.getElementById('btn-download-file');
+                    if (dlBtn) {
+                        dlBtn.onclick = function() {
+                            var a = document.createElement('a');
+                            a.href = 'data:application/octet-stream;base64,' + data.file_b64;
+                            a.download = data.filename;
+                            a.click();
+                            showToast('✅ Saved: ' + data.filename, false);
+                        };
+                    }
+
+                    showToast('🎉 Decrypted Successfully! (ML-KEM-768 Verified)', false);
+                    document.getElementById('decrypted-view').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    alert('⚠️ ACCESS DENIED:\n\n' + (data.error || 'Decryption failed'));
+                    showToast(data.error || 'Decryption failed', true);
+                }
+            } catch (e) {
+                showToast('Failed to connect to server: ' + e, true);
+            }
+        }
+
+        function openImageModal() {
+            if (!currentReceivedFile) return;
+            var ext = (currentReceivedFile.filename.split('.').pop() || '').toLowerCase();
+            var isImg = (['png', 'jpg', 'jpeg', 'bmp', 'webp'].indexOf(ext) !== -1);
+            if (!isImg || !currentReceivedFile.file_b64) return;
+            
+            var modal = document.getElementById('image-modal');
+            var modalImg = document.getElementById('modal-img-elem');
+            
+            if (modalImg) modalImg.src = 'data:image/' + (ext === 'jpg' ? 'jpeg' : ext) + ';base64,' + currentReceivedFile.file_b64;
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function closeImageModal() {
+            var modal = document.getElementById('image-modal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function simulateLeak() {
+            if (!currentReceivedFile) return;
+
+            if (currentReceivedFile.is_text) {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(currentReceivedFile.text_content);
+                }
+                alert('🚨 LEAK SIMULATION:\n\nText with covert Zero-Width Unicode watermark copied to clipboard!\n\n👉 On Laptop A (Forensic Lab), paste this text to trace the leak back to ' + (currentAgent ? currentAgent.display_name : 'this terminal') + '!');
+            } else {
+                var a = document.createElement('a');
+                a.href = 'data:application/octet-stream;base64,' + currentReceivedFile.file_b64;
+                a.download = 'leaked_' + currentReceivedFile.filename;
+                a.click();
+                alert('🚨 LEAK SIMULATION:\n\nWatermarked file downloaded as "leaked_' + currentReceivedFile.filename + '"!\n\n👉 On Laptop A (Forensic Lab), upload this file to trace the leak back to ' + (currentAgent ? currentAgent.display_name : 'this terminal') + '!');
+            }
+        }
+
+        window.onload = function() {
+            initKeyring();
+            var params = new URLSearchParams(window.location.search);
+            var id = params.get('id');
+            if (id) {
+                document.getElementById('portal-dispatch-id').value = id;
+                receiveDispatch();
+            }
+            setInterval(loadDispatches, 4000);
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "pqc-offline-secure-broadcast",
+  "version": "1.0.0",
+  "description": "Air-Gapped Post-Quantum Forensic Broadcast Platform",
+  "private": true,
+  "scripts": {
+    "start": "node launch_ui.js",
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^1.5.0"
+  }
+}

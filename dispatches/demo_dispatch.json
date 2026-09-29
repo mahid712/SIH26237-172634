@@ -1,0 +1,10 @@
+{
+  "dispatch_id": "DISP-2026-9901",
+  "sender_id": "agent-alice-sender",
+  "receiver_id": "agent-bob-receiver",
+  "kem_algorithm": "ML-KEM-768",
+  "symmetric_algorithm": "AES-256-GCM",
+  "watermark_proof": "f80ee4ad4bb6041cbfe1e656119de8f4a2f7eed6fbb8e18d3bd6862b7363caf1",
+  "payload_length": 65536,
+  "status": "OFFLINE_READY_FOR_SNEAKERNET_OR_USB_TRANSFER"
+}

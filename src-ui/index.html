@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air-Gapped PQC Forensics & DLT Command Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        if (window.location.protocol === 'file:') {
+            window.location.href = 'http://127.0.0.1:8080/';
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="brand">
+            <span style="font-size: 22px;">🛡️</span>
+            <div>
+                <h1>AIR-GAPPED POST-QUANTUM FORENSICS & DLT PLATFORM</h1>
+                <p style="font-size: 11px; color: var(--text-muted);">NIST FIPS 203/204 • SHA3-512 Ledger • 176-Pass 2D-DCT & Zero-Width Watermarking</p>
+            </div>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <a id="btn-mobile-portal" href="/portal.html" target="_blank" class="btn btn-outline" style="text-decoration: none; font-size: 11px; border-color: var(--cyan); color: #38bdf8; display: flex; align-items: center; gap: 6px;">📱 Mobile Portal</a>
+            <button class="btn btn-outline" onclick="auditLedger()">Audit 4-Layer DLT</button>
+            <button class="btn btn-danger" onclick="clearLedger()" style="background: rgba(239, 68, 68, 0.15); border-color: var(--red); color: #fca5a5;">🧹 Reset DLT (SIH Demo)</button>
+            <button class="btn btn-danger" onclick="zeroizeMemory()">Zeroize RAM Buffer</button>
+            <div class="badge-emcon"><div class="dot-pulse"></div>EMCON ACTIVE</div>
+        </div>
+    </header>
+
+    <nav class="nav-tabs">
+        <button id="tab-btn-hotspot" class="tab-btn active" onclick="switchTab('hotspot')">🚀 1. Hotspot Dispatch (Sender A) <span class="popout-btn" onclick="popoutWindow('hotspot', event)">🗗</span></button>
+        <button id="tab-btn-forensics" class="tab-btn" onclick="switchTab('forensics')">🕵️ 2. Forensic Lab (Investigate Leak) <span class="popout-btn" onclick="popoutWindow('forensics', event)">🗗</span></button>
+        <button id="tab-btn-pqc" class="tab-btn" onclick="switchTab('pqc')">🔐 3. NIST PQC Core <span class="popout-btn" onclick="popoutWindow('pqc', event)">🗗</span></button>
+        <button id="tab-btn-stego" class="tab-btn" onclick="switchTab('stego')">📡 4. Stego Studio Sandbox <span class="popout-btn" onclick="popoutWindow('stego', event)">🗗</span></button>
+        <button id="tab-btn-dlt" class="tab-btn" onclick="switchTab('dlt')">🔗 5. Private DLT Ledger <span class="popout-btn" onclick="popoutWindow('dlt', event)">🗗</span></button>
+    </nav>
+
+    <main>
+        <!-- 1. HOTSPOT DISPATCH (DEVICE A - SENDER) -->
+        <div id="panel-hotspot" class="panel active">
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📤 Step 1: Ingest File & Configure Watermark</span>
+                        <span class="status-tag status-info">SENDER NODE</span>
+                    </div>
+
+                    <label>Select Real File (Image, TXT, Code, PDF, ZIP, Binary):</label>
+                    <div class="dropzone" id="sender-dropzone" onclick="document.getElementById('file-upload-input').click()">
+                        <p style="font-size: 14px; font-weight: 600; color: var(--cyan);">📁 Click to Browse or Drop File</p>
+                        <p id="file-info-disp" style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Supports PNG, JPG, TXT, PY, C, PDF, DOCX, ZIP</p>
+                    </div>
+                    <input type="file" id="file-upload-input" style="display: none;" onchange="handleFileSelect(event)">
+
+                    <label>Filename (Optional / Auto-detected from upload):</label>
+                    <input type="text" id="filename-input" placeholder="e.g. intelligence_briefing.txt (auto-filled on file upload)">
+
+                    <div style="margin-bottom: 14px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <label style="margin: 0; font-weight: 700;">📡 Broadcast to Authorized Recipients (PQC Public Key Ring):</label>
+                            <div style="display: flex; gap: 6px;">
+                                <button type="button" class="btn btn-outline" onclick="selectAllRecipients(true)" style="padding: 2px 8px; font-size: 11px;">Select All</button>
+                                <button type="button" class="btn btn-outline" onclick="selectAllRecipients(false)" style="padding: 2px 8px; font-size: 11px;">Clear</button>
+                                <button type="button" class="btn btn-outline" onclick="openAddAgentModal()" style="padding: 2px 8px; font-size: 11px;">+ Add Agent</button>
+                            </div>
+                        </div>
+                        <div id="recipients-checklist" style="display: flex; flex-direction: column; gap: 6px; background: rgba(0,0,0,0.25); border: 1px solid var(--border); border-radius: 6px; padding: 10px; max-height: 150px; overflow-y: auto;">
+                            <span style="font-size: 12px; color: var(--text-muted);">Loading registered PQC keypairs...</span>
+                        </div>
+                    </div>
+
+                    <label>Or Paste Custom Text Content (if no file chosen):</label>
+                    <textarea id="custom-text-input" rows="2" placeholder="Enter sensitive intelligence briefing text here..."></textarea>
+
+                    <button class="btn btn-success" onclick="createDispatch()" style="width: 100%; padding: 12px; font-size: 14px;">
+                        ⚡ Broadcast Watermarked &amp; ML-KEM-768 Encrypted Dispatches
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📦 Step 2: Dispatch Package & Hotspot LAN Link</span>
+                        <span class="status-tag status-ok">POST-QUANTUM READY</span>
+                    </div>
+
+                    <div id="dispatch-result-box" class="code-box" style="height: 220px;">Ready to generate secure dispatch. Select a file or enter text on the left.</div>
+
+                    <div style="margin-top: 16px; display: flex; gap: 10px;">
+                        <button id="btn-download-watermarked" class="btn" style="display: none; flex: 1;">⬇️ Download Watermarked File</button>
+                        <button class="btn btn-outline" onclick="window.open('/portal.html', '_blank')" style="flex: 1;">🌐 Open Recipient Portal (Laptop B)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. FORENSIC LAB (INVESTIGATOR NODE) -->
+        <div id="panel-forensics" class="panel">
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">🔍 Ingest Suspect Leaked File</span>
+                        <span class="status-tag status-err">FORENSIC EXTRACTION</span>
+                    </div>
+
+                    <label>Upload Suspect File Recovered from Leak:</label>
+                    <div class="dropzone" id="suspect-dropzone" onclick="document.getElementById('suspect-upload-input').click()">
+                        <p style="font-size: 14px; font-weight: 600; color: var(--red);">🚨 Select Leaked Image / Document / Binary</p>
+                        <p id="suspect-info-disp" style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Will run 176-pass 2D-DCT scan or Zero-Width extractor</p>
+                    </div>
+                    <input type="file" id="suspect-upload-input" style="display: none;" onchange="handleSuspectSelect(event)">
+
+                    <label>Suspect Filename:</label>
+                    <input type="text" id="suspect-filename" value="leaked_document.txt">
+
+                    <label>Or Paste Leaked Text:</label>
+                    <textarea id="suspect-pasted-text" rows="4" placeholder="Paste leaked text containing covert Unicode or copy-pasted leaks..."></textarea>
+
+                    <button class="btn btn-danger" onclick="runForensicInvestigation()" style="width: 100%; padding: 12px; font-size: 14px;">
+                        🔬 Execute 176-Pass Forensic Extraction & DLT Match
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">⚖️ Attribution Verdict & Cryptographic Proof</span>
+                        <span class="status-tag status-ok">DLT VERIFIED</span>
+                    </div>
+
+                    <div id="forensic-report-box" class="code-box" style="height: 280px;">Ingest a suspect file and click "Execute Forensic Extraction" to identify the leaker with mathematical proof.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. NIST PQC CORE -->
+        <div id="panel-pqc" class="panel">
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🔐 NIST FIPS 203 ML-KEM-768</span><span class="status-tag status-ok">Kyber-768</span></div>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Ring arithmetic over Z_3329[X]/(X^256 + 1) with NTT acceleration.</p>
+                    <div class="btn-group-pqc">
+                        <button class="btn btn-purple" onclick="kemKeygen()">🔑 Keygen</button>
+                        <button class="btn btn-outline" onclick="kemEncaps()">📦 Encapsulate</button>
+                        <button class="btn btn-success" onclick="kemDecaps()">🔓 Decapsulate</button>
+                    </div>
+                    <label>Public Key (Hex):</label>
+                    <div id="kem-pk-box" class="code-box" style="max-height: 70px;">Click Keygen to generate ML-KEM-768 public key</div>
+                    <label style="margin-top: 8px;">Ciphertext & Shared Secret:</label>
+                    <div id="kem-ct-box" class="code-box" style="max-height: 70px;">Ciphertext</div>
+                    <div id="kem-ss-box" class="code-box" style="max-height: 60px; color: #a78bfa;">Shared Secret</div>
+                    <label style="margin-top: 8px;">Decapsulated Secret:</label>
+                    <div id="kem-decaps-box" class="code-box" style="max-height: 60px; color: #34d399;">Decapsulated Output</div>
+                    <p id="kem-info" style="font-size: 11px; color: var(--text-muted); margin-top: 6px;"></p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">✍️ NIST FIPS 204 ML-DSA-65</span><span class="status-tag status-ok">Dilithium-65</span></div>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Fiat-Shamir with Aborts lattice-based digital signatures.</p>
+                    <div class="btn-group-pqc">
+                        <button class="btn btn-purple" onclick="dsaKeygen()">🔑 Keygen</button>
+                        <button class="btn btn-amber" onclick="dsaSign()">✍️ Sign</button>
+                        <button class="btn btn-success" onclick="dsaVerify()">🛡️ Verify</button>
+                    </div>
+                    <label>Message to Sign:</label>
+                    <input type="text" id="dsa-msg-input" value="DLT_TRANSACTION_PAYLOAD_BLOCK_04">
+                    <label>Public Key:</label>
+                    <div id="dsa-pk-box" class="code-box" style="max-height: 60px;">DSA Public Key</div>
+                    <label style="margin-top: 8px;">Digital Signature (Hex):</label>
+                    <div id="dsa-sig-box" class="code-box" style="max-height: 70px;">ML-DSA-65 Signature</div>
+                    <div id="dsa-verify-box" style="margin-top: 10px;"></div>
+                    <p id="dsa-info" style="font-size: 11px; color: var(--text-muted); margin-top: 6px;"></p>
+                    <div style="margin-top: 12px; padding: 10px; background: rgba(239, 68, 68, 0.1); border: 1px solid var(--red); border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <span style="font-size: 12px; font-weight: 700; color: #f87171;">RAM Zeroization Status:</span>
+                            <p id="zeroize-status" style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Memory buffer protected with ZeroizeOnDrop</p>
+                        </div>
+                        <button class="btn btn-danger" onclick="zeroizeMemory()" style="padding: 6px 12px; font-size: 11px;">🧹 Wipe RAM</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. STEGO STUDIO SANDBOX -->
+        <div id="panel-stego" class="panel">
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📡 Stego Configuration Sandbox</span><span class="status-tag status-info">SANDBOX</span></div>
+                    <label>Cover Text / Base Message:</label>
+                    <textarea id="stego-cover-input" rows="3">Top Secret Operational Directive: Sector 7 Protocol Initiated.</textarea>
+                    <label>Covert Fingerprint Payload:</label>
+                    <input type="text" id="stego-payload-input" value="AGENT_007_LAPTOP_B_AUTH">
+                    <label>Select Carrier Encoding Scheme:</label>
+                    <div class="btn-group-stego">
+                        <button class="btn btn-purple" onclick="runStegoEmbed('text')">📝 Text (Zero-Width)</button>
+                        <button class="btn btn-amber" onclick="runStegoEmbed('binary')">💾 Binary (Signed EOF)</button>
+                        <button class="btn btn-outline" onclick="runStegoEmbed('metadata')">⏱️ Jitter / Metatag</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Stego Execution Output</span></div>
+                    <div id="stego-result-box" class="code-box" style="height: 250px;">Select a steganographic medium to view encoded carrier results.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. PRIVATE DLT LEDGER -->
+        <div id="panel-dlt" class="panel">
+            <div class="card" style="margin-bottom: 20px;">
+                <div class="card-header">
+                    <span class="card-title">🔗 Private SHA3-512 Blockchain Ledger Visualizer</span>
+                    <div>
+                        <span id="dlt-badge" class="status-tag status-ok">4-LAYER PRISTINE</span>
+                        <button class="btn btn-outline" onclick="loadDLTChain()" style="margin-left: 8px;">🔄 Refresh Chain</button>
+                    </div>
+                </div>
+                <p id="dlt-summary" style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">Loading chain...</p>
+                <div style="max-height: 260px; overflow-y: auto;">
+                    <table class="dlt-table" id="dlt-table-body">
+                        <thead>
+                            <tr>
+                                <th>Block #</th>
+                                <th>Previous Hash (SHA3-512)</th>
+                                <th>Merkle Root</th>
+                                <th>Transactions</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🛡️ 4-Layer Cryptographic Tamper Audit</span><button class="btn btn-outline" onclick="auditLedger()">Run Audit</button></div>
+                    <div id="audit-result-box" class="code-box" style="height: 140px;">Auditing 4 layers: Hash Link, Merkle Root, PQC Signature, State Monotonicity...</div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🧪 Tamper Resistance Simulator</span></div>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Simulate an attacker tampering with historical forensic blocks on disk.</p>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button class="btn btn-danger" onclick="injectTamper(0, 'prev_hash')">Corrupt Block #0 Hash</button>
+                        <button class="btn btn-danger" onclick="injectTamper(1, 'merkle_root')">Corrupt Block #1 Merkle</button>
+                        <button class="btn btn-success" onclick="restoreLedger()">Restore Ledger</button>
+                        <button class="btn btn-danger" onclick="clearLedger()" style="background: rgba(239, 68, 68, 0.2); border-color: var(--red);">🧹 Reset Ledger &amp; Dispatches (SIH Demo)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Agent Modal -->
+    <div id="add-agent-modal" style="display: none; position: fixed; inset: 0; background: rgba(5, 8, 15, 0.9); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+        <div class="card" style="max-width: 450px; width: 100%; border-color: var(--cyan);">
+            <div class="card-header">
+                <span class="card-title">➕ Register Authorized PQC Agent</span>
+                <button class="btn btn-outline" onclick="closeAddAgentModal()" style="padding: 2px 8px; font-size: 11px;">✕</button>
+            </div>
+            <label>Agent Codename / Username (lowercase):</label>
+            <input type="text" id="new-agent-username" placeholder="e.g. dave">
+            <label>Full Display Name:</label>
+            <input type="text" id="new-agent-display" placeholder="e.g. Agent Dave">
+            <label>Assigned Device Terminal:</label>
+            <input type="text" id="new-agent-device" value="Terminal-D" placeholder="e.g. Laptop-D, Mobile-D">
+            <label>Security Clearance Level:</label>
+            <input type="text" id="new-agent-clearance" value="Secret-04">
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button class="btn btn-success" onclick="submitRegisterAgent()" style="flex: 1;">🔑 Generate ML-KEM-768 Keypair &amp; Register</button>
+                <button class="btn btn-outline" onclick="closeAddAgentModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
